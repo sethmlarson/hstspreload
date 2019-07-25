@@ -55,7 +55,7 @@ def deploy(session):
         "-m",
         "twine",
         "upload",
-        "--ignore-existing",
+        "--skip-existing",
         "dist/*",
         "--username",
         os.environ["PYPI_USERNAME"],
