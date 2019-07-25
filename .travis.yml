@@ -1,0 +1,12 @@
+language: python
+python: 3.7
+
+env:
+  - NOX_SESSION=check
+  - NOX_SESSION=test
+
+install:
+  - python -m pip install nox
+
+script:
+  - python -m nox -s ${NOX_SESSION}
