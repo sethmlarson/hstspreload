@@ -36,10 +36,10 @@ def build(session):
 
 @nox.session(reuse_venv=True)
 def test(session):
-    session.install("httpx", "pytest", "pytest-xdist")
+    session.install("httpx", "pytest")
     session.install(".")
 
-    session.run("python", "-m", "pytest", "-q", "-n", "4", "test_hstspreload.py")
+    session.run("python", "-m", "pytest", "-q", "test_hstspreload.py")
 
 
 @nox.session(reuse_venv=True)

@@ -23,5 +23,6 @@ deploy:
   skip_cleanup: true
   script: python -m nox -s deploy
   on:
+    env: NOX_SESSION=test
     branch: master
     repo: sethmlarson/hstspreload
