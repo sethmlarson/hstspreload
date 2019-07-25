@@ -54,11 +54,6 @@ def load_test_cases():
             yield b"zzz-subdomain." + host, include_subdomains
 
 
-@pytest.mark.parametrize(["host", "expected"], list(load_test_cases()))
-def test_in_hsts_preload(host, expected):
-    assert hstspreload.in_hsts_preload(host) is expected
-
-
 @pytest.mark.parametrize(
     ["host", "expected"],
     [
@@ -66,9 +61,14 @@ def test_in_hsts_preload(host, expected):
         ("www.google.com", False),
         (b"google.com", False),
         ("google.com", False),
-        ("example.com", True),
-        (b"example.com", True),
+        ("paypal.com", True),
+        (b"paypal.com", True),
     ],
 )
 def test_data_types(host, expected):
+    assert hstspreload.in_hsts_preload(host) is expected
+
+
+@pytest.mark.parametrize(["host", "expected"], list(load_test_cases()))
+def test_in_hsts_preload(host, expected):
     assert hstspreload.in_hsts_preload(host) is expected

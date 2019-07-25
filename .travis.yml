@@ -1,12 +1,27 @@
 language: python
 python: 3.7
+dist: xenial
+sudo: required
 
 env:
-  - NOX_SESSION=check
-  - NOX_SESSION=test
+  global:
+    - PYPI_USERNAME=SethMichaelLarson
+    # PYPI_PASSWORD is set in the Travis settings
+
+  matrix:
+    - NOX_SESSION=check
+    - NOX_SESSION=test
 
 install:
   - python -m pip install nox
 
 script:
   - python -m nox -s ${NOX_SESSION}
+
+deploy:
+  provider: script
+  skip_cleanup: true
+  script: python -m nox -s deploy
+  on:
+    branch: master
+    repo: sethmlarson/hstspreload

@@ -43,10 +43,12 @@ def test(session):
 
 
 @nox.session(reuse_venv=True)
-def upload(session):
+def deploy(session):
     session.install("twine")
 
-    session.run("rm", "-rf", "dist/*")
+    if os.path.isdir("dist"):
+        session.run("rm", "-rf", "dist/*")
+
     session.run("python", "setup.py", "build", "sdist")
     session.run(
         "python",
