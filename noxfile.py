@@ -76,4 +76,5 @@ def deploy(session):
         os.environ["PYPI_USERNAME"],
         "--password",
         os.environ["PYPI_PASSWORD"],
+        success_codes=[0, 1],
     )
