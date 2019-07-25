@@ -1,4 +1,5 @@
 import os
+
 import nox
 
 source_files = (
@@ -12,8 +13,22 @@ source_files = (
 
 @nox.session(reuse_venv=True)
 def lint(session):
-    session.install("black")
+    session.install("autoflake", "black", "flake8", "isort", "seed-isort-config")
 
+    session.run("autoflake", "--in-place", "--recursive", *source_files)
+    session.run("seed-isort-config", "--application-directories=hstspreload")
+    session.run(
+        "isort",
+        "--project=hstspreload",
+        "--multi-line=3",
+        "--trailing-comma",
+        "--force-grid-wrap=0",
+        "--combine-as",
+        "--line-width=88",
+        "--recursive",
+        "--apply",
+        *source_files,
+    )
     session.run("black", "--target-version=py36", *source_files)
 
     check(session)
@@ -21,10 +36,13 @@ def lint(session):
 
 @nox.session(reuse_venv=True)
 def check(session):
-    session.install("black", "flake8")
+    session.install("black", "flake8", "mypy")
 
-    session.run("black", "--target-version=py36", "--check", *source_files)
-    session.run("flake8", "--max-line-length=88", "--ignore=E203,W503", *source_files)
+    session.run("black", "--check", "--target-version=py36", *source_files)
+    session.run("flake8", "--max-line-length=88", "--ignore=W503,E203", *source_files)
+    session.run(
+        "mypy", "hstspreload", "--ignore-missing-imports", "--disallow-untyped-defs"
+    )
 
 
 @nox.session(reuse_venv=True)
@@ -44,6 +62,8 @@ def test(session):
 
 @nox.session(reuse_venv=True)
 def deploy(session):
+    build(session)
+
     session.install("twine")
 
     if os.path.isdir("dist"):

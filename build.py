@@ -2,14 +2,15 @@
 
 import base64
 import datetime
-import json
-import struct
-import re
-import sys
-import httpx
 import hashlib
-from hstspreload import _crc8, _IS_LEAF, _INCLUDE_SUBDOMAINS, _LAYER_HEADER_SIZE
+import json
+import re
+import struct
+import sys
 
+import httpx
+
+from hstspreload import _INCLUDE_SUBDOMAINS, _IS_LEAF, _LAYER_HEADER_SIZE, _crc8
 
 HSTS_PRELOAD_URL = (
     "https://chromium.googlesource.com/chromium/src/+/master/"
@@ -21,7 +22,7 @@ CHECKSUM_RE = re.compile(r"^__checksum__\s+=\s+\"([a-f0-9]*)\"", re.MULTILINE)
 
 def main():
     print("Downloading latest HSTS preload list...")
-    r = httpx.request("GET", HSTS_PRELOAD_URL, verify=True)
+    r = httpx.request("GET", HSTS_PRELOAD_URL, verify=True, timeout=20)
     content = base64.b64decode(r.content)
     content_checksum = hashlib.sha256(content).hexdigest()
     content = content.decode("ascii")
@@ -33,7 +34,7 @@ def main():
     print("Checksum of current list is: %s" % current_checksum)
     if current_checksum == content_checksum:
         print("Detected no changes to HSTS preload list, cancelling build...")
-        return 100
+        return 1
 
     print("Parsing HSTS preload entries...")
     entries = json.loads(

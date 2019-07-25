@@ -1,10 +1,9 @@
 """Check if a host is in the Google Chrome HSTS Preload list"""
 
-import os
 import functools
+import os
 import struct
 import typing
-
 
 __version__ = "2019.7.25"
 __checksum__ = "dbb3f84f1aeb5cb2791d7e78ab8547c6eca54c391216e04f6ed404e1babc2ef2"

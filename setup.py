@@ -1,7 +1,7 @@
 import os
 import re
-from setuptools import setup
 
+from setuptools import setup
 
 with open(os.path.abspath("hstspreload/__init__.py"), "r") as f:
     version = re.search(r"__version__\s+=\s+\"([\d.]+)\"", f.read()).group(1)
@@ -18,9 +18,8 @@ setup(
     long_description_content_type="text/markdown",
     license="BSD-3",
     url="https://github.com/sethmlarson/hstspreload",
-    author="Andrey Kislyuk",
-    maintainer="Seth Michael Larson",
-    maintainer_email="sethmichaellarson@gmail.com",
+    author="Seth Michael Larson",
+    author_email="sethmichaellarson@gmail.com",
     packages=["hstspreload"],
     package_dir={"hstspreload": "hstspreload"},
     package_data={"hstspreload": ["hstspreload.bin"]},

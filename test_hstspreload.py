@@ -2,11 +2,10 @@ import base64
 import hashlib
 import json
 
-import pytest
 import httpx
+import pytest
 
 import hstspreload
-
 
 HSTS_PRELOAD_URL = (
     "https://chromium.googlesource.com/chromium/src/+/master/"
