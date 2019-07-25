@@ -46,7 +46,7 @@ def check(session):
 def build(session):
     session.install("httpx")
 
-    session.run("python", "build.py", success_codes=[0, 100])
+    session.run("python", "build.py")
 
 
 @nox.session(reuse_venv=True)

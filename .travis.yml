@@ -22,6 +22,7 @@ jobs:
   include:
     - script: python -m nox -s check
     - script: python -m nox -s test
+      env: DEPLOY=1
 
     - script: .travis/cron.sh
       stage: cron
@@ -32,6 +33,6 @@ deploy:
   skip_cleanup: true
   script: python -m nox -s deploy
   on:
-    condition: $NOX_SESSION = test
+    condition: $DEPLOY = 1
     branch: master
     repo: sethmlarson/hstspreload
