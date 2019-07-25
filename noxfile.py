@@ -59,8 +59,6 @@ def test(session):
 
 @nox.session(reuse_venv=True)
 def deploy(session):
-    build(session)
-
     session.install("twine")
 
     if os.path.isdir("dist"):
