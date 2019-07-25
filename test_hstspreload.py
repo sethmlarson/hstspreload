@@ -14,7 +14,7 @@ HSTS_PRELOAD_URL = (
 
 
 def load_test_cases():
-    r = httpx.request("GET", HSTS_PRELOAD_URL, verify=True)
+    r = httpx.request("GET", HSTS_PRELOAD_URL, verify=True, timeout=20)
     content = base64.b64decode(r.content)
     content_checksum = hashlib.sha256(content).hexdigest()
 
