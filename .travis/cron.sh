@@ -7,6 +7,10 @@ if nox -s build; then
   # Deal with detached head state that Travis puts us in
   git checkout master
 
+  # Change our Git username and email to not be Travis user
+  git config --global user.name "Seth Michael Larson"
+  git config --global user.email "sethmichaellarson@gmail.com"
+
   # Create a commit with the date attached
   datetime=`date "+%Y-%-m-%-d"`
   git add hstspreload/
