@@ -20,6 +20,8 @@ setup(
     url="https://github.com/sethmlarson/hstspreload",
     author="Seth Michael Larson",
     author_email="sethmichaellarson@gmail.com",
+    maintainer="Python HTTP Working Group",
+    maintainer_email="admin@python-http.org",
     packages=["hstspreload"],
     package_dir={"hstspreload": "hstspreload"},
     package_data={"hstspreload": ["hstspreload.bin"]},

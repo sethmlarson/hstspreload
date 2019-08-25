@@ -35,4 +35,5 @@ deploy:
   on:
     condition: $DEPLOY = 1
     branch: master
-    repo: sethmlarson/hstspreload
+    repo: python-http/hstspreload
+
