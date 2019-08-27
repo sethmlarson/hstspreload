@@ -18,6 +18,6 @@ if nox -s build; then
 
   # Use our GitHub token to make the commit
   git remote rm origin
-  git remote add origin https://sethmlarson:${GITHUB_TOKEN}@github.com/sethmlarson/hstspreload > /dev/null 2>&1
+  git remote add origin https://sethmlarson:${GITHUB_TOKEN}@github.com/python-http/hstspreload > /dev/null 2>&1
   git push origin master --quiet
 fi
