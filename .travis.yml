@@ -3,7 +3,6 @@ python: 3.7
 dist: xenial
 sudo: required
 
-stage: test
 env:
   global:
     - PYPI_USERNAME=SethMichaelLarson
@@ -12,6 +11,7 @@ env:
 install:
   - python -m pip install nox
 
+stage: test
 stages:
   - name: test
     if: type != cron
@@ -22,18 +22,6 @@ jobs:
   include:
     - script: python -m nox -s check
     - script: python -m nox -s test
-      env: DEPLOY=1
 
     - script: .travis/cron.sh
       stage: cron
-
-
-deploy:
-  provider: script
-  skip_cleanup: true
-  script: python -m nox -s deploy
-  on:
-    condition: $DEPLOY = 1
-    branch: master
-    repo: python-http/hstspreload
-
