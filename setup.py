@@ -17,7 +17,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     license="BSD-3",
-    url="https://github.com/sethmlarson/hstspreload",
+    url="https://github.com/python-http/hstspreload",
     author="Seth Michael Larson",
     author_email="sethmichaellarson@gmail.com",
     maintainer="Python HTTP Working Group",
