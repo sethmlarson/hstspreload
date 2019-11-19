@@ -5,8 +5,8 @@ import os
 import struct
 import typing
 
-__version__ = "2019.11.18"
-__checksum__ = "024ee9d4ce4828ba5757ca6b3c6d65bdb25bdee855aa7978830fa8c43a387ba5"
+__version__ = "2019.11.19"
+__checksum__ = "3f5620d887841d24022c1ded2d91899e13dac2a04b6d8daae7f63ec6c6cd53fb"
 __all__ = ["in_hsts_preload"]
 
 # fmt: off
