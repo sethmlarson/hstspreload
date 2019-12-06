@@ -2,8 +2,8 @@ import base64
 import hashlib
 import json
 
-import httpx
 import pytest
+import urllib3
 
 import hstspreload
 
@@ -14,8 +14,14 @@ HSTS_PRELOAD_URL = (
 
 
 def load_test_cases():
-    r = httpx.request("GET", HSTS_PRELOAD_URL, verify=True, timeout=20)
-    content = base64.b64decode(r.content)
+    http = urllib3.PoolManager()
+    r = http.request(
+        "GET",
+        HSTS_PRELOAD_URL,
+        headers={"Accept": "application/json"},
+        preload_content=True,
+    )
+    content = base64.b64decode(r.data)
     content_checksum = hashlib.sha256(content).hexdigest()
 
     assert content_checksum == hstspreload.__checksum__

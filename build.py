@@ -8,7 +8,7 @@ import re
 import struct
 import sys
 
-import httpx
+import urllib3
 
 from hstspreload import _INCLUDE_SUBDOMAINS, _IS_LEAF, _LAYER_HEADER_SIZE, _crc8
 
@@ -22,8 +22,14 @@ CHECKSUM_RE = re.compile(r"^__checksum__\s+=\s+\"([a-f0-9]*)\"", re.MULTILINE)
 
 def main():
     print("Downloading latest HSTS preload list...")
-    r = httpx.request("GET", HSTS_PRELOAD_URL, verify=True, timeout=20)
-    content = base64.b64decode(r.content)
+    http = urllib3.PoolManager()
+    r = http.request(
+        "GET",
+        HSTS_PRELOAD_URL,
+        headers={"Accept": "application/json"},
+        preload_content=True,
+    )
+    content = base64.b64decode(r.data)
     content_checksum = hashlib.sha256(content).hexdigest()
     content = content.decode("ascii")
     print("Checksum of downloaded list is: %s" % content_checksum)

@@ -44,14 +44,14 @@ def check(session):
 
 @nox.session(reuse_venv=True)
 def build(session):
-    session.install("httpx")
+    session.install("urllib3")
 
     session.run("python", "build.py")
 
 
 @nox.session(reuse_venv=True)
 def test(session):
-    session.install("httpx", "pytest")
+    session.install("urllib3", "pytest")
     session.install(".")
 
     session.run("python", "-m", "pytest", "-q", "test_hstspreload.py")
