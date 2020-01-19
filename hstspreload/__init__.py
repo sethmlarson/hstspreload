@@ -1,7 +1,8 @@
 """Check if a host is in the Google Chrome HSTS Preload list"""
 
 import functools
-import os
+import io
+import pkgutil
 import struct
 import typing
 
@@ -68,9 +69,6 @@ _GTLD_INCLUDE_SUBDOMAINS = {
     b"search",
     b"youtube",
 }
-_HSTSPRELOAD_BIN_PATH = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), "hstspreload.bin"
-)
 
 
 @functools.lru_cache(maxsize=1024)
@@ -85,35 +83,39 @@ def in_hsts_preload(host: typing.AnyStr) -> bool:
     if labels[-1] in _GTLD_INCLUDE_SUBDOMAINS:
         return True
 
-    with open(_HSTSPRELOAD_BIN_PATH, "rb") as f:
-        for layer, label in enumerate(labels[::-1]):
-            # None of our layers are greater than 4 deep.
-            if layer > 3:
-                return False
+    preload_data = pkgutil.get_data('hstspreload', 'hstspreload.bin')
+    if not preload_data:
+        return False
 
-            # Read the jump table for the layer and label
-            offset, size = _get_offset_and_size(f, layer, label)
-            if offset == 0:
-                return False
+    f = io.BytesIO(preload_data)
+    for layer, label in enumerate(labels[::-1]):
+        # None of our layers are greater than 4 deep.
+        if layer > 3:
+            return False
 
-            # Read the set of entries for that layer
-            f.seek(offset, 1)
-            data = bytearray(size)
-            f.readinto(data)
+        # Read the jump table for the layer and label
+        offset, size = _get_offset_and_size(f, layer, label)
+        if offset == 0:
+            return False
 
-            for is_leaf, include_subdomains, ent_label in _iter_entries(data):
-                # We found a potential leaf
-                if is_leaf:
-                    if ent_label == host:
-                        return True
-                    if include_subdomains and host.endswith(b"." + ent_label):
-                        return True
+        # Read the set of entries for that layer
+        f.seek(offset, 1)
+        data = bytearray(size)
+        f.readinto(data)
 
-                # Continue traversing as we're not at a leaf.
-                elif label == ent_label:
-                    break
-            else:
-                return False
+        for is_leaf, include_subdomains, ent_label in _iter_entries(data):
+            # We found a potential leaf
+            if is_leaf:
+                if ent_label == host:
+                    return True
+                if include_subdomains and host.endswith(b"." + ent_label):
+                    return True
+
+            # Continue traversing as we're not at a leaf.
+            elif label == ent_label:
+                break
+        else:
+            return False
     return False
 
 
