@@ -64,7 +64,7 @@ def deploy(session):
     if os.path.isdir("dist"):
         session.run("rm", "-rf", "dist/*")
 
-    session.run("python", "setup.py", "build", "sdist")
+    session.run("python", "setup.py", "build", "sdist", "bdist_wheel")
     session.run(
         "python",
         "-m",
