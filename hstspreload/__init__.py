@@ -68,9 +68,20 @@ _GTLD_INCLUDE_SUBDOMAINS = {
     b"search",
     b"youtube",
 }
-_HSTSPRELOAD_BIN_PATH = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), "hstspreload.bin"
-)
+
+try:
+    from importlib.resources import open_binary
+
+    def open_pkg_binary(path: str) -> typing.BinaryIO:
+        return open_binary("hstspreload", path)
+
+
+except ImportError:
+
+    def open_pkg_binary(path: str) -> typing.BinaryIO:
+        return open(
+            os.path.join(os.path.dirname(os.path.abspath(__file__)), path), "rb",
+        )
 
 
 @functools.lru_cache(maxsize=1024)
@@ -85,7 +96,7 @@ def in_hsts_preload(host: typing.AnyStr) -> bool:
     if labels[-1] in _GTLD_INCLUDE_SUBDOMAINS:
         return True
 
-    with open(_HSTSPRELOAD_BIN_PATH, "rb") as f:
+    with open_pkg_binary("hstspreload.bin") as f:
         for layer, label in enumerate(labels[::-1]):
             # None of our layers are greater than 4 deep.
             if layer > 3:
