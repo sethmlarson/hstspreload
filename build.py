@@ -99,7 +99,7 @@ def main():
         for checksum in range(256):
             bin_layer = bin_layers[(layer, checksum)]
             if not bin_layer:
-                jump_table_for_layer.append((None, 0))
+                jump_table_for_layer.append(None)
             else:
                 layer_len = len(bin_layer)
                 jump_table_for_layer.append((current_offset, layer_len))
