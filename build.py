@@ -10,7 +10,7 @@ import sys
 
 import urllib3
 
-from hstspreload import _INCLUDE_SUBDOMAINS, _IS_LEAF, _LAYER_HEADER_SIZE, _crc8
+from hstspreload import _INCLUDE_SUBDOMAINS, _IS_LEAF, _crc8
 
 HSTS_PRELOAD_URL = (
     "https://chromium.googlesource.com/chromium/src/+/master/"
@@ -18,6 +18,7 @@ HSTS_PRELOAD_URL = (
 )
 VERSION_RE = re.compile(r"^__version__\s+=\s+\"[\d.]+\"", re.MULTILINE)
 CHECKSUM_RE = re.compile(r"^__checksum__\s+=\s+\"([a-f0-9]*)\"", re.MULTILINE)
+JUMPTABLE_RE = re.compile(r"^_JUMPTABLE\s+=\s+[^\n]+$", re.MULTILINE)
 
 
 def main():
@@ -60,8 +61,8 @@ def main():
         if force_https:
             for i, label in enumerate(labels):
                 is_leaf = i == (len(labels) - 1)
-                offset = _crc8(label)
-                labs = layers.setdefault((i, offset), set())
+                checksum = _crc8(label)
+                labs = layers.setdefault((i, checksum), set())
                 labs.add(
                     (
                         is_leaf,
@@ -72,12 +73,11 @@ def main():
 
     print("Encoding labels into binary...")
     bin_layers = {}
-    all_data = 0
-    for offset in range(4):
+    for layer in range(4):
         for checksum in range(256):
             chunks = []
             for is_leaf, include_subdomains, label in sorted(
-                layers.get((offset, checksum), []),
+                layers.get((layer, checksum), []),
                 key=lambda x: (not x[0], x[1], 256 - len(x[2]), x[2]),
             ):
                 flags = 0x00
@@ -89,38 +89,31 @@ def main():
                     raise ValueError("label too long for encoding scheme: %r" % label)
                 chunks.append(struct.pack("<BB", flags, len(label)) + label)
 
-            bin_layers[(offset, checksum)] = b"".join(chunks)
-            all_data += len(b"".join(chunks))
+            bin_layers[(layer, checksum)] = b"".join(chunks)
 
     print("Encoding layer offsets into jump table...")
-    bin_headers = {}
-    per_layer = 0
-    for offset in range(4):
-        bin_headers[offset] = b""
+    jump_table = []
+    current_offset = 0
+    for layer in range(4):
+        jump_table_for_layer = []
         for checksum in range(256):
-            layer = bin_layers[(offset, checksum)]
-            if not layer:
-                bin_headers[offset] += struct.pack("<IH", 0, 0)
+            bin_layer = bin_layers[(layer, checksum)]
+            if not bin_layer:
+                jump_table_for_layer.append(None)
             else:
-                bin_headers[offset] += struct.pack(
-                    "<IH",
-                    ((3 - offset) * _LAYER_HEADER_SIZE)
-                    + ((255 - checksum) * 6)
-                    + per_layer,
-                    len(layer),
-                )
-                per_layer += len(layer)
+                layer_len = len(bin_layer)
+                jump_table_for_layer.append((current_offset, layer_len))
+                current_offset += layer_len
+        jump_table.append(jump_table_for_layer)
 
     print("Writing data into hstspreload.bin...")
     with open("hstspreload/hstspreload.bin", "wb") as f:
         f.truncate()
-        for offset in range(4):
-            f.write(bin_headers[offset])
-        for offset in range(4):
+        for layer in range(4):
             for checksum in range(256):
-                f.write(bin_layers[(offset, checksum)])
+                f.write(bin_layers[(layer, checksum)])
 
-    print("Updating __version__ and __checksum__...")
+    print("Updating __version__, __checksum__ and _JUMPTABLE...")
     with open("hstspreload/__init__.py", "r") as f:
         data = f.read()
     today = datetime.date.today()
@@ -128,6 +121,7 @@ def main():
         '__version__ = "%d.%d.%d"' % (today.year, today.month, today.day), data, re.M
     )
     data = CHECKSUM_RE.sub('__checksum__ = "%s"' % content_checksum, data)
+    data = JUMPTABLE_RE.sub("_JUMPTABLE = %s  # noqa: E501" % str(jump_table), data)
     with open("hstspreload/__init__.py", "w") as f:
         f.truncate()
         f.write(data)
