@@ -19,6 +19,9 @@ HSTS_PRELOAD_URL = (
 VERSION_RE = re.compile(r"^__version__\s+=\s+\"[\d.]+\"", re.MULTILINE)
 CHECKSUM_RE = re.compile(r"^__checksum__\s+=\s+\"([a-f0-9]*)\"", re.MULTILINE)
 JUMPTABLE_RE = re.compile(r"^_JUMPTABLE\s+=\s+[^\n]+$", re.MULTILINE)
+GTLD_INCLUDE_SUBDOMAINS_RE = re.compile(
+    r"^_GTLD_INCLUDE_SUBDOMAINS\s+=\s+[^\n]+$", re.MULTILINE
+)
 
 
 def main():
@@ -51,6 +54,7 @@ def main():
     )["entries"]
 
     layers = {}
+    gtld_include_subdomains = set()
 
     for entry in entries:
         name = entry["name"].encode("ascii")
@@ -70,6 +74,8 @@ def main():
                         name if is_leaf else label,
                     )
                 )
+                if i == 0 and is_leaf:
+                    gtld_include_subdomains.add(name)
 
     print("Encoding labels into binary...")
     bin_layers = {}
@@ -113,7 +119,9 @@ def main():
             for checksum in range(256):
                 f.write(bin_layers[(layer, checksum)])
 
-    print("Updating __version__, __checksum__ and _JUMPTABLE...")
+    print(
+        "Updating __version__, __checksum__, _JUMPTABLE and _GTLD_INCLUDE_SUBDOMAINS..."
+    )
     with open("hstspreload/__init__.py", "r") as f:
         data = f.read()
     today = datetime.date.today()
@@ -122,6 +130,10 @@ def main():
     )
     data = CHECKSUM_RE.sub('__checksum__ = "%s"' % content_checksum, data)
     data = JUMPTABLE_RE.sub("_JUMPTABLE = %s  # noqa: E501" % str(jump_table), data)
+    data = GTLD_INCLUDE_SUBDOMAINS_RE.sub(
+        "_GTLD_INCLUDE_SUBDOMAINS = %s  # noqa: E501" % str(gtld_include_subdomains),
+        data,
+    )
     with open("hstspreload/__init__.py", "w") as f:
         f.truncate()
         f.write(data)
