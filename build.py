@@ -74,7 +74,7 @@ def main():
                         name if is_leaf else label,
                     )
                 )
-                if i == 0 and is_leaf:
+                if i == 0 and is_leaf and include_subdomains:
                     gtld_include_subdomains.add(name)
 
     print("Encoding labels into binary...")
