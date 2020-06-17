@@ -4,7 +4,7 @@ import nox
 
 source_files = (
     "hstspreload/",
-    "test_hstspreload.py",
+    "tests/",
     "build.py",
     "setup.py",
     "noxfile.py",
@@ -51,10 +51,17 @@ def build(session):
 
 @nox.session(reuse_venv=True)
 def test(session):
-    session.install("urllib3", "pytest")
+    session.install("urllib3", "pytest", "pytest-asyncio")
     session.install(".")
 
-    session.run("python", "-m", "pytest", "-q", "test_hstspreload.py")
+    session.run(
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_lrucache.py",
+        "tests/test_hstspreload.py",
+    )
 
 
 @nox.session(reuse_venv=True)

@@ -34,7 +34,6 @@ def load_test_cases():
     )["entries"]
 
     allow_subdomains = []
-
     for entry in sorted(entries, key=lambda x: len(x["name"])):
         host = entry["name"].encode("ascii")
         include_subdomains = entry.get("include_subdomains", False)
@@ -59,6 +58,7 @@ def load_test_cases():
             yield b"zzz-subdomain." + host, include_subdomains
 
 
+@pytest.mark.asyncio
 @pytest.mark.parametrize(
     ["host", "expected"],
     [
@@ -70,10 +70,13 @@ def load_test_cases():
         (b"paypal.com", True),
     ],
 )
-def test_data_types(host, expected):
+async def test_data_types(host, expected):
+    assert await hstspreload.in_hsts_preload_async(host) is expected
     assert hstspreload.in_hsts_preload(host) is expected
 
 
+@pytest.mark.asyncio
 @pytest.mark.parametrize(["host", "expected"], list(load_test_cases()))
-def test_in_hsts_preload(host, expected):
+async def test_in_hsts_preload(host, expected):
+    assert await hstspreload.in_hsts_preload_async(host) is expected
     assert hstspreload.in_hsts_preload(host) is expected
