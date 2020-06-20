@@ -126,7 +126,9 @@ def main():
         data = f.read()
     today = datetime.date.today()
     # render the gtld subdomains in sorted order
-    str_gtld_include_subdomains = "{" + ", ".join([ str(e) for e in sorted(gtld_include_subdomains)])  + "}"
+    str_gtld_include_subdomains = (
+        "{" + ", ".join([str(e) for e in sorted(gtld_include_subdomains)]) + "}"
+    )
     data = VERSION_RE.sub(
         '__version__ = "%d.%d.%d"' % (today.year, today.month, today.day), data, re.M
     )
