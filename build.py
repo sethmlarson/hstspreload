@@ -125,13 +125,15 @@ def main():
     with open("hstspreload/__init__.py", "r") as f:
         data = f.read()
     today = datetime.date.today()
+    # render the gtld subdomains in sorted order
+    str_gtld_include_subdomains = "{" + ", ".join([ str(e) for e in sorted(gtld_include_subdomains)])  + "}"
     data = VERSION_RE.sub(
         '__version__ = "%d.%d.%d"' % (today.year, today.month, today.day), data, re.M
     )
     data = CHECKSUM_RE.sub('__checksum__ = "%s"' % content_checksum, data)
     data = JUMPTABLE_RE.sub("_JUMPTABLE = %s  # noqa: E501" % str(jump_table), data)
     data = GTLD_INCLUDE_SUBDOMAINS_RE.sub(
-        "_GTLD_INCLUDE_SUBDOMAINS = %s  # noqa: E501" % str(gtld_include_subdomains),
+        "_GTLD_INCLUDE_SUBDOMAINS = %s  # noqa: E501" % str_gtld_include_subdomains,
         data,
     )
     with open("hstspreload/__init__.py", "w") as f:
