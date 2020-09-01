@@ -13,7 +13,9 @@ source_files = (
 
 @nox.session(reuse_venv=True)
 def lint(session):
-    session.install("autoflake", "black", "flake8", "isort", "seed-isort-config")
+    session.install(
+        "autoflake", "black==20.8b1", "flake8", "isort", "seed-isort-config"
+    )
 
     session.run("autoflake", "--in-place", "--recursive", *source_files)
     session.run("seed-isort-config", "--application-directories=hstspreload")
