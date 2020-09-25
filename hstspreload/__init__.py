@@ -4,8 +4,8 @@ import functools
 import os
 import typing
 
-__version__ = "2020.9.23"
-__checksum__ = "688fbafb079dbeb9ed95a4690cd4747666cd22454d8cb768f3f3dfd572c39cd9"
+__version__ = "2020.9.25"
+__checksum__ = "df90ce69df19dbac74cef76a5d60c08ce4414d31940a36b34b51aba78054dcd7"
 __all__ = ["in_hsts_preload"]
 
 # fmt: off
