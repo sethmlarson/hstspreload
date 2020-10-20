@@ -13,7 +13,7 @@ with open("README.md") as f:
 setup(
     name="hstspreload",
     version=version,
-    description="Chromium HSTS Preload list as a Python package and updated daily",
+    description="Chromium HSTS Preload list as a Python package",
     long_description=long_description,
     long_description_content_type="text/markdown",
     license="BSD-3",
