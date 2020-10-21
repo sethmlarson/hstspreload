@@ -1,6 +1,6 @@
 # hstspreload
 
-Chromium HSTS Preload list as a Python package and updated daily.
+Chromium HSTS Preload list as a Python package.
 
 Install via `python -m pip install hstspreload`
 
@@ -13,6 +13,9 @@ IDNA-encoded host and returns either `True` or `False` regarding whether
 that host should be only accessed via HTTPS.
 
 ## Changelog
+
+This package is built entirely by an automated script running once a month.
+If you need a release sooner of the package please reach out and I'll trigger a release manually.
 
 This script gathers the HSTS Preload list by monitoring
 [this file in the Chromium repository](https://github.com/chromium/chromium/blob/master/net/http/transport_security_state_static.json).
