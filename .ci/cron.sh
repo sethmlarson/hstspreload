@@ -8,7 +8,7 @@ if nox -s build; then
   # Test our local changes before creating a tag
   nox -s check test
 
-  # Deal with detached head state that Travis puts us in
+  # Deal with detached head state that GitHub Actions puts us in
   git checkout master
 
   # Change our Git username and email to not be Travis user
