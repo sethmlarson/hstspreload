@@ -6,7 +6,7 @@ if nox -s build; then
   set -e
 
   # Test our local changes before creating a tag
-  nox -s check test
+  nox -s lint test
 
   # Deal with detached head state that GitHub Actions puts us in
   git checkout master
