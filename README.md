@@ -1,5 +1,10 @@
 # hstspreload
 
+
+[![Version](https://img.shields.io/pypi/v/hstspreload)](https://pypi.org/project/hstspreload)
+[![Downloads](https://pepy.tech/badge/hstspreload)](https://pepy.tech/project/hstspreload)
+![CI](https://img.shields.io/github/workflow/status/sethmlarson/hstspreload/CI/master)
+
 Chromium HSTS Preload list as a Python package.
 
 Install via `python -m pip install hstspreload`
