@@ -9,7 +9,7 @@ if nox -s build; then
   nox -s lint test
 
   # Deal with detached head state that GitHub Actions puts us in
-  git checkout master
+  git checkout main
 
   # Change our Git username and email to not be Travis user
   git config --global user.name "Seth Michael Larson"
@@ -25,7 +25,7 @@ if nox -s build; then
   # Use our GitHub token to make the commit
   git remote rm origin
   git remote add origin https://sethmlarson:${GITHUB_TOKEN}@github.com/sethmlarson/hstspreload > /dev/null 2>&1
-  git push origin master --quiet --tags
+  git push origin main --quiet --tags
 
   # Deploy our changes to PyPI
   PYPI_TOKEN="$PYPI_TOKEN" nox -s deploy
