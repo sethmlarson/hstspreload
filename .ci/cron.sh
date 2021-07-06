@@ -28,5 +28,5 @@ if nox -s build; then
   git push origin main --quiet --tags
 
   # Deploy our changes to PyPI
-  PYPI_TOKEN="$PYPI_TOKEN" nox -s deploy
+  nox -s deploy
 fi

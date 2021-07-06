@@ -1,7 +1,10 @@
-name: Cron
+name: "Deploy to PyPI"
 on:
-  schedule:
-    - cron: "0 13 * * 1" # Every Monday at 9AM US Eastern
+  workflow_dispatch:
+    inputs: 
+      tag:
+        description: "Git tag to deploy to PyPI"
+        required: true
 
 defaults:
   run:
