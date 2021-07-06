@@ -1,7 +1,7 @@
 name: Cron
 on:
   schedule:
-    - cron: "0 13 * * 1" # Every Monday at 9AM US Eastern
+    - cron: "0 0 1 * *" # First day of the month
 
 defaults:
   run:
@@ -18,7 +18,7 @@ jobs:
         with:
           python-version: 3.x
       - name: Install dependencies
-        run: python3.8 -m pip install nox
+        run: python -m pip install nox
       - name: Build and upload package
         env:
           PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
