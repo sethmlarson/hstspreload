@@ -23,9 +23,7 @@ This package is built entirely by an automated script running once a month.
 If you need a release sooner of the package please reach out and I'll trigger a release manually.
 
 This script gathers the HSTS Preload list by monitoring
-[this file in the Chromium repository](https://github.com/chromium/chromium/blob/master/net/http/transport_security_state_static.json).
-Changes to the HSTS Preload list can be seen in the
-[history of that file](https://github.com/chromium/chromium/commits/master/net/http/transport_security_state_static.json).
+[this file in the Chromium repository](https://chromium.googlesource.com/chromium/src/+/main/net/http/transport_security_state_static.json). Changes to the HSTS Preload list can be seen in the history of that file.
 
 ## License
 

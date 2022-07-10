@@ -13,7 +13,7 @@ import urllib3
 from hstspreload import _INCLUDE_SUBDOMAINS, _IS_LEAF, _crc8
 
 HSTS_PRELOAD_URL = (
-    "https://chromium.googlesource.com/chromium/src/+/master/"
+    "https://chromium.googlesource.com/chromium/src/+/main/"
     "net/http/transport_security_state_static.json?format=TEXT"
 )
 VERSION_RE = re.compile(r"^__version__\s+=\s+\"[\d.]+\"", re.MULTILINE)
