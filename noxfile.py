@@ -5,7 +5,7 @@ import nox
 source_files = (
     "hstspreload/",
     "test_hstspreload.py",
-    "build.py",
+    "build-hstspreload.py",
     "setup.py",
     "noxfile.py",
 )
@@ -38,7 +38,7 @@ def lint(session):
 def build(session):
     session.install("-rrequirements/test.txt")
 
-    session.run("python", "build.py")
+    session.run("python", "build-hstspreload.py")
 
 
 @nox.session(reuse_venv=True)
