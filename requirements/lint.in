@@ -1,0 +1,4 @@
+autoflake
+black==20.8b1
+click<8.1
+isort
