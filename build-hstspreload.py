@@ -79,7 +79,7 @@ def main():
 
     print("Encoding labels into binary...")
     bin_layers = {}
-    for layer in range(4):
+    for layer in range(5):
         for checksum in range(256):
             chunks = []
             for is_leaf, include_subdomains, label in sorted(
@@ -100,7 +100,7 @@ def main():
     print("Encoding layer offsets into jump table...")
     jump_table = []
     current_offset = 0
-    for layer in range(4):
+    for layer in range(5):
         jump_table_for_layer = []
         for checksum in range(256):
             bin_layer = bin_layers[(layer, checksum)]
@@ -115,7 +115,7 @@ def main():
     print("Writing data into hstspreload.bin...")
     with open("hstspreload/hstspreload.bin", "wb") as f:
         f.truncate()
-        for layer in range(4):
+        for layer in range(5):
             for checksum in range(256):
                 f.write(bin_layers[(layer, checksum)])
 
