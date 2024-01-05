@@ -81,8 +81,8 @@ def in_hsts_preload(host: typing.AnyStr) -> bool:
 
     with open_pkg_binary("hstspreload.bin") as f:
         for layer, label in enumerate(labels[::-1]):
-            # None of our layers are greater than 4 deep.
-            if layer > 3:
+            # None of our layers are greater than 5 deep.
+            if layer > 4:
                 return False
 
             # Read the jump table for the layer and label
