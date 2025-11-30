@@ -57,7 +57,6 @@ try:
     def open_pkg_binary(path: str) -> typing.BinaryIO:
         return open_binary("hstspreload", path)
 
-
 except ImportError:
 
     def open_pkg_binary(path: str) -> typing.BinaryIO:

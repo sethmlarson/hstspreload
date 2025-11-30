@@ -13,12 +13,12 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
-      - name: Set up Python 3.8
+      - name: Set up Python 3.9
         uses: actions/setup-python@v2
         with:
-          python-version: 3.8
+          python-version: 3.9
       - name: Install dependencies
-        run: python3.8 -m pip install nox
+        run: python3.9 -m pip install nox
       - name: Lint the code
         run: nox -s lint
 
@@ -28,11 +28,11 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
-      - name: Set up Python 3.8
+      - name: Set up Python 3.9
         uses: actions/setup-python@v2
         with:
-          python-version: 3.8
+          python-version: 3.9
       - name: Install dependencies
-        run: python3.8 -m pip install nox
+        run: python3.9 -m pip install nox
       - name: Test the code
         run: nox -s test
