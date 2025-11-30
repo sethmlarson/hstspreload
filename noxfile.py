@@ -21,7 +21,7 @@ def format(session):
         "--profile=black",
         *source_files,
     )
-    session.run("black", "--target-version=py36", *source_files)
+    session.run("black", "--target-version=py39", *source_files)
 
     lint(session)
 
@@ -30,7 +30,7 @@ def format(session):
 def lint(session):
     session.install("-rrequirements/lint.txt")
 
-    session.run("black", "--check", "--target-version=py36", *source_files)
+    session.run("black", "--check", "--target-version=py39", *source_files)
     session.run("flake8", "--max-line-length=88", "--ignore=W503,E203", *source_files)
 
 
